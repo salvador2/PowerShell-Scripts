@@ -1,0 +1,22 @@
+# Caminho da pasta de origem
+$sourcePath = "C:\Users\ab029mp\OneDrive - Absa\Channels Reports\Sales\Data\2024\INV"
+
+# Caminho da pasta de destino
+$destinationPath = "C:\Users\ab029mp\OneDrive - Absa\Channels Reports\Sales\Data\2024\Inventario"
+
+# Verifica se a pasta de destino existe, caso contrário cria
+if (-not (Test-Path -Path $destinationPath)) {
+    New-Item -ItemType Directory -Path $destinationPath
+}
+
+# Busca por arquivos que começam com "InventarioLCY_" nas subpastas
+Get-ChildItem -Path $sourcePath -Recurse -Filter "InventarioLCY_*" | ForEach-Object {
+    $file = $_
+    $destinationFile = Join-Path -Path $destinationPath -ChildPath $file.Name
+
+    # Move o arquivo para a pasta de destino
+    Move-Item -Path $file.FullName -Destination $destinationFile -Force
+    Write-Host "Arquivo movido: $($file.FullName) -> $destinationFile"
+}
+
+Write-Host "Todos os arquivos foram movidos com sucesso!"
